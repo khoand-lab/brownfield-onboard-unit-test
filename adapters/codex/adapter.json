@@ -1,0 +1,13 @@
+{
+  "client": "codex",
+  "skillPath": "skills/brownfield-unit-test",
+  "install": {
+    "project": [
+      { "from": "skills/brownfield-unit-test", "to": ".agents/skills/brownfield-unit-test" }
+    ],
+    "user": [
+      { "from": "skills/brownfield-unit-test", "to": ".agents/skills/brownfield-unit-test" },
+      { "from": "prompts/unit-test.md", "to": ".codex/prompts/unit-test.md" }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+dist/
+node_modules/
+examples/**/target/
+examples/**/node_modules/
+examples/**/.venv/
+examples/**/__pycache__/
+examples/**/.pytest_cache/
+.unit-test-agent/
+examples/**/build/
+examples/**/.gradle/
+examples/**/local.properties
+examples/**/.dart_tool/
+.eval/

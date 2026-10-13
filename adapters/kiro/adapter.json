@@ -1,0 +1,16 @@
+{
+  "client": "kiro",
+  "skillPath": "skills/brownfield-unit-test",
+  "install": {
+    "project": [
+      { "from": "skills/brownfield-unit-test", "to": ".kiro/skills/brownfield-unit-test" },
+      { "from": "prompts/unit-test.md", "to": ".kiro/prompts/unit-test.md" },
+      { "from": "agents/unit-test-writer.json", "to": ".kiro/agents/unit-test-writer.json" }
+    ],
+    "user": [
+      { "from": "skills/brownfield-unit-test", "to": ".kiro/skills/brownfield-unit-test" },
+      { "from": "prompts/unit-test.md", "to": ".kiro/prompts/unit-test.md" },
+      { "from": "agents/unit-test-writer.json", "to": ".kiro/agents/unit-test-writer.json" }
+    ]
+  }
+}

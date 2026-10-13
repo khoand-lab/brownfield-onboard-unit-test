@@ -1,0 +1,17 @@
+{
+  "name": "brownfield-unit-test-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client-agnostic agent that writes unit tests for brownfield projects, packaged for Claude Code, Kiro and Codex.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "install-agent": "node scripts/install.mjs",
+    "test": "node --test scripts/test/build.test.mjs scripts/test/check.test.mjs scripts/test/install.test.mjs scripts/test/eval-config.test.mjs scripts/test/eval-workspace.test.mjs scripts/test/eval-runner.test.mjs scripts/test/eval-transcript.test.mjs scripts/test/eval-checks.test.mjs scripts/test/eval-report.test.mjs scripts/test/eval-cli.test.mjs",
+    "eval": "node scripts/eval.mjs"
+  }
+}

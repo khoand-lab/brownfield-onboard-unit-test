@@ -1,0 +1,19 @@
+{
+  "client": "claude-code",
+  "skillPath": "skills/brownfield-unit-test",
+  "skillFrontmatter": {
+    "argument-hint": "scope=<đường dẫn|Class#method|changed:<ref>> [mode=confirm|auto] [coverage-target=N] [max-fix-attempts=1..10] [failed-test-policy=remove|disable] [save-report=true|<file>]"
+  },
+  "install": {
+    "project": [
+      { "from": "skills/brownfield-unit-test", "to": ".claude/skills/brownfield-unit-test" },
+      { "from": "agents/unit-test-writer.md", "to": ".claude/agents/unit-test-writer.md" },
+      { "from": "commands/unit-test.md", "to": ".claude/commands/unit-test.md" }
+    ],
+    "user": [
+      { "from": "skills/brownfield-unit-test", "to": ".claude/skills/brownfield-unit-test" },
+      { "from": "agents/unit-test-writer.md", "to": ".claude/agents/unit-test-writer.md" },
+      { "from": "commands/unit-test.md", "to": ".claude/commands/unit-test.md" }
+    ]
+  }
+}

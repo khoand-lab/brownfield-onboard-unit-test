@@ -1,0 +1,565 @@
+{
+  "examplesDir": "examples",
+  "clients": {
+    "claude-code": {
+      "executable": "claude",
+      "versionArgs": [
+        "--version"
+      ],
+      "adapter": "claude-code",
+      "promptPrefix": "/unit-test ",
+      "transcriptFormat": "claude-stream-json",
+      "sessionId": {
+        "generate": "uuid"
+      },
+      "timeoutMinutes": 45,
+      "turns": {
+        "auto": [
+          "-p",
+          "{prompt}",
+          "--permission-mode",
+          "acceptEdits",
+          "--allowedTools",
+          "Read,Write,Edit,Glob,Grep,Skill,Agent,Task,Bash,PowerShell",
+          "--output-format",
+          "stream-json",
+          "--verbose"
+        ],
+        "confirmPlan": [
+          "-p",
+          "{prompt}",
+          "--session-id",
+          "{sessionId}",
+          "--permission-mode",
+          "acceptEdits",
+          "--allowedTools",
+          "Read,Write,Edit,Glob,Grep,Skill,Agent,Task,Bash,PowerShell",
+          "--output-format",
+          "stream-json",
+          "--verbose"
+        ],
+        "confirmApprove": [
+          "-p",
+          "{prompt}",
+          "--resume",
+          "{sessionId}",
+          "--permission-mode",
+          "acceptEdits",
+          "--allowedTools",
+          "Read,Write,Edit,Glob,Grep,Skill,Agent,Task,Bash,PowerShell",
+          "--output-format",
+          "stream-json",
+          "--verbose"
+        ]
+      }
+    },
+    "kiro": {
+      "executable": "kiro-cli",
+      "versionArgs": [
+        "--version"
+      ],
+      "adapter": "kiro",
+      "promptPrefix": "",
+      "transcriptFormat": "text",
+      "timeoutMinutes": 45,
+      "turns": {
+        "auto": [
+          "chat",
+          "--agent",
+          "unit-test-writer",
+          "--no-interactive",
+          "--trust-all-tools",
+          "{prompt}"
+        ],
+        "confirmPlan": [
+          "chat",
+          "--agent",
+          "unit-test-writer",
+          "--no-interactive",
+          "--trust-all-tools",
+          "{prompt}"
+        ],
+        "confirmApprove": [
+          "chat",
+          "--resume",
+          "--agent",
+          "unit-test-writer",
+          "--no-interactive",
+          "--trust-all-tools",
+          "{prompt}"
+        ]
+      }
+    },
+    "codex": {
+      "executable": "codex",
+      "versionArgs": [
+        "--version"
+      ],
+      "adapter": "codex",
+      "promptPrefix": "$brownfield-unit-test ",
+      "transcriptFormat": "codex-jsonl",
+      "sessionId": {
+        "fromOutput": "\"thread_id\":\"([^\"]+)\""
+      },
+      "env": {
+        "GRADLE_OPTS": "-Dorg.gradle.daemon=false"
+      },
+      "timeoutMinutes": 90,
+      "turns": {
+        "auto": [
+          "exec",
+          "--skip-git-repo-check",
+          "--sandbox",
+          "danger-full-access",
+          "--json",
+          "{prompt}"
+        ],
+        "confirmPlan": [
+          "exec",
+          "--skip-git-repo-check",
+          "--sandbox",
+          "danger-full-access",
+          "--json",
+          "{prompt}"
+        ],
+        "confirmApprove": [
+          "exec",
+          "resume",
+          "{sessionId}",
+          "--skip-git-repo-check",
+          "--dangerously-bypass-approvals-and-sandbox",
+          "--json",
+          "{prompt}"
+        ]
+      }
+    }
+  },
+  "stacks": {
+    "java-spring-boot": {
+      "example": "java-spring-boot",
+      "scope": "src/main/java/com/example/shop",
+      "requires": [
+        [
+          "java",
+          "-version"
+        ],
+        [
+          "mvn",
+          "-v"
+        ]
+      ],
+      "testCommand": [
+        "mvn",
+        "-q",
+        "test"
+      ],
+      "failurePattern": "^\\[ERROR\\]\\s+(\\w+\\.\\w+):\\d+",
+      "expectedFailures": [
+        {
+          "file": "src/test/java/com/example/shop/pricing/TaxRuleTests.java",
+          "name": "TaxRuleTests.givenAmount_whenWithTax_thenAddsVat"
+        }
+      ],
+      "prodPaths": [
+        "src/main/**"
+      ],
+      "testPaths": [
+        "src/test/**"
+      ],
+      "buildDirs": [
+        "target"
+      ],
+      "badMarkers": [
+        "@SpringBootTest",
+        "@Disabled",
+        "@Ignore"
+      ],
+      "hardUnits": [
+        {
+          "file": "src/main/java/com/example/shop/invoice/InvoiceExporter.java",
+          "name": "InvoiceExporter"
+        }
+      ]
+    },
+    "nodejs": {
+      "example": "nodejs",
+      "scope": "src",
+      "requires": [
+        [
+          "node",
+          "--version"
+        ],
+        [
+          "npm",
+          "--version"
+        ]
+      ],
+      "deps": {
+        "dir": "node_modules",
+        "install": [
+          "npm",
+          "ci",
+          "--no-audit",
+          "--no-fund"
+        ]
+      },
+      "testCommand": [
+        "npx",
+        "jest",
+        "--ci"
+      ],
+      "failurePattern": "^\\s*● (?!Console$)(.+?)\\s*$",
+      "expectedFailures": [
+        {
+          "file": "test/pricing/tax-rule.spec.js",
+          "name": "tax-rule › withTax › khi có số tiền thì cộng VAT"
+        }
+      ],
+      "prodPaths": [
+        "src/**"
+      ],
+      "testPaths": [
+        "test/**"
+      ],
+      "buildDirs": [
+        "coverage"
+      ],
+      "badMarkers": [
+        "\\.only\\(",
+        "\\.skip\\(",
+        "\\bxit\\(",
+        "toMatchSnapshot"
+      ],
+      "hardUnits": [
+        {
+          "file": "src/invoice/invoice-exporter.js",
+          "name": "invoice-exporter"
+        }
+      ]
+    },
+    "python": {
+      "example": "python",
+      "scope": "src/shop",
+      "requires": [
+        [
+          "python",
+          "--version"
+        ]
+      ],
+      "deps": {
+        "dir": ".venv",
+        "install": [
+          [
+            "python",
+            "-m",
+            "venv",
+            ".venv"
+          ],
+          [
+            ".venv/Scripts/python.exe",
+            "-m",
+            "pip",
+            "install",
+            "-q",
+            "-r",
+            "requirements-dev.txt"
+          ]
+        ]
+      },
+      "testCommand": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-rf",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "failurePattern": "^(?:FAILED|ERROR) (\\S+)",
+      "expectedFailures": [
+        {
+          "file": "tests/pricing/test_tax_rule.py",
+          "name": "test_tax_rule.py::test_with_tax_khi_co_so_tien_thi_cong_vat"
+        }
+      ],
+      "prodPaths": [
+        "src/**"
+      ],
+      "testPaths": [
+        "tests/**"
+      ],
+      "buildDirs": [
+        "__pycache__",
+        ".pytest_cache",
+        "htmlcov"
+      ],
+      "badMarkers": [
+        "@pytest\\.mark\\.skip",
+        "\\bunittest\\.skip"
+      ],
+      "hardUnits": [
+        {
+          "file": "src/shop/invoice/invoice_exporter.py",
+          "name": "invoice_exporter"
+        }
+      ]
+    },
+    "react": {
+      "example": "react",
+      "scope": "src",
+      "requires": [
+        [
+          "node",
+          "--version"
+        ]
+      ],
+      "deps": {
+        "dir": "node_modules",
+        "install": [
+          "npm",
+          "ci",
+          "--no-audit",
+          "--no-fund"
+        ]
+      },
+      "testCommand": [
+        "npx",
+        "vitest",
+        "run"
+      ],
+      "failurePattern": "^\\s*FAIL\\s+(.+?)\\s*$",
+      "expectedFailures": [
+        {
+          "file": "src/pricing/__tests__/tax-rule.test.ts",
+          "name": "tax-rule > withTax > khi có số tiền thì cộng VAT"
+        }
+      ],
+      "prodPaths": [
+        "src/**"
+      ],
+      "testPaths": [
+        "src/**/__tests__/**"
+      ],
+      "buildDirs": [
+        "coverage",
+        "dist"
+      ],
+      "badMarkers": [
+        "\\.only\\(",
+        "\\.skip\\(",
+        "toMatchSnapshot",
+        "toMatchInlineSnapshot",
+        "jest-dom",
+        "toBeInTheDocument"
+      ],
+      "hardUnits": [
+        {
+          "file": "src/invoice/exportInvoice.ts",
+          "name": "exportInvoice"
+        }
+      ]
+    },
+    "vue": {
+      "example": "vue",
+      "scope": "src",
+      "requires": [
+        [
+          "node",
+          "--version"
+        ]
+      ],
+      "deps": {
+        "dir": "node_modules",
+        "install": [
+          "npm",
+          "ci",
+          "--no-audit",
+          "--no-fund"
+        ]
+      },
+      "testCommand": [
+        "npx",
+        "vitest",
+        "run"
+      ],
+      "failurePattern": "^\\s*FAIL\\s+(.+?)\\s*$",
+      "expectedFailures": [
+        {
+          "file": "tests/unit/pricing/tax-rule.spec.ts",
+          "name": "TaxRule > withTax() > should add VAT when amount is given"
+        }
+      ],
+      "prodPaths": [
+        "src/**"
+      ],
+      "testPaths": [
+        "tests/**"
+      ],
+      "buildDirs": [
+        "coverage",
+        "dist"
+      ],
+      "badMarkers": [
+        "\\.only\\(",
+        "\\.skip\\(",
+        "toMatchSnapshot",
+        "toMatchInlineSnapshot"
+      ],
+      "hardUnits": [
+        {
+          "file": "src/invoice/exportInvoice.ts",
+          "name": "exportInvoice"
+        }
+      ]
+    },
+    "angular": {
+      "example": "angular",
+      "scope": "src/app",
+      "requires": [
+        [
+          "node",
+          "--version"
+        ]
+      ],
+      "deps": {
+        "dir": "node_modules",
+        "install": [
+          "npm",
+          "ci",
+          "--no-audit",
+          "--no-fund"
+        ]
+      },
+      "testCommand": [
+        "npx",
+        "ng",
+        "test",
+        "--watch=false",
+        "--browsers=ChromeHeadless"
+      ],
+      "failurePattern": "^(?:Chrome|Edge|Firefox)[^)]*\\)\\s+(.+?) FAILED\\s*$",
+      "expectedFailures": [
+        {
+          "file": "src/app/pricing/tax-rule.spec.ts",
+          "name": "tax-rule withTax khi có số tiền thì cộng VAT"
+        }
+      ],
+      "prodPaths": [
+        "src/**"
+      ],
+      "testPaths": [
+        "src/**/*.spec.ts"
+      ],
+      "buildDirs": [
+        "coverage",
+        "dist",
+        ".angular"
+      ],
+      "badMarkers": [
+        "\\bfit\\(",
+        "\\bfdescribe\\(",
+        "\\bxit\\(",
+        "\\bxdescribe\\(",
+        "toMatchSnapshot"
+      ],
+      "hardUnits": [
+        {
+          "file": "src/app/invoice/invoice-exporter.service.ts",
+          "name": "invoice-exporter"
+        }
+      ]
+    },
+    "android-java": {
+      "example": "android-java",
+      "scope": "app/src/main/java/com/example/shop",
+      "requires": [
+        [
+          "java",
+          "-version"
+        ]
+      ],
+      "testCommand": [
+        "./gradlew.bat",
+        ":app:testDebugUnitTest",
+        "--console=plain"
+      ],
+      "failurePattern": "^(\\w[\\w.$]* > .+?) FAILED\\s*$",
+      "expectedFailures": [
+        {
+          "file": "app/src/test/java/com/example/shop/pricing/TaxRuleUnitTest.java",
+          "name": "TaxRuleUnitTest > withTax_amountGiven_addsVat"
+        }
+      ],
+      "prodPaths": [
+        "app/src/main/**"
+      ],
+      "testPaths": [
+        "app/src/test/**"
+      ],
+      "buildDirs": [
+        "build",
+        ".gradle"
+      ],
+      "badMarkers": [
+        "@Ignore",
+        "@Disabled"
+      ],
+      "hardUnits": [
+        {
+          "file": "app/src/main/java/com/example/shop/invoice/InvoiceExporter.java",
+          "name": "InvoiceExporter"
+        }
+      ]
+    },
+    "flutter": {
+      "example": "flutter",
+      "scope": "lib/src",
+      "requires": [
+        [
+          "flutter",
+          "--version"
+        ]
+      ],
+      "deps": {
+        "dir": ".dart_tool",
+        "install": [
+          [
+            "flutter",
+            "pub",
+            "get"
+          ]
+        ]
+      },
+      "testCommand": [
+        "flutter",
+        "test"
+      ],
+      "failurePattern": "^\\d+:\\d+ \\+\\d+(?: ~\\d+)? -\\d+: (.+?) \\[E\\]\\s*$",
+      "expectedFailures": [
+        {
+          "file": "test/src/pricing/tax_rule_test.dart",
+          "name": "tax_rule withTax cộng VAT khi có số tiền"
+        }
+      ],
+      "prodPaths": [
+        "lib/**"
+      ],
+      "testPaths": [
+        "test/**"
+      ],
+      "buildDirs": [
+        "build",
+        "coverage"
+      ],
+      "badMarkers": [
+        "skip:\\s*true",
+        "\\bsolo:\\s*true"
+      ],
+      "hardUnits": [
+        {
+          "file": "lib/src/invoice/invoice_exporter.dart",
+          "name": "invoice_exporter"
+        }
+      ]
+    }
+  }
+}

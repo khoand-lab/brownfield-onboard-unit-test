@@ -1,0 +1,21 @@
+{
+  "name": "shop-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dự án mẫu brownfield Node.js (CommonJS + Jest) để thử agent brownfield-unit-test",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["<rootDir>/test/**/*.spec.js"]
+  }
+}
